@@ -16,11 +16,12 @@ import (
 )
 
 const (
-	defaultProxyUrl    = "https://iris.zeus.fyi/v1/"
+	defaultProxyUrl    = "https://iris.zeus.fyi/v1/router"
 	proxyHeader        = "Proxy-Relay-To"
 	SessionLockHeader  = "Session-Lock-ID"
 	DurableExecutionID = "Durable-Execution-ID"
 	EndSessionLockID   = "End-Session-Lock-ID"
+	RouteGroupHeader   = "X-Route-Group"
 )
 
 type Web3Actions struct {
@@ -107,6 +108,13 @@ func (w *Web3Actions) AddBearerToken(token string) {
 		w.Headers = make(map[string]string)
 	}
 	w.Headers["Authorization"] = "Bearer " + token
+}
+
+func (w *Web3Actions) AddRoutingGroupHeader(group string) {
+	if w.Headers == nil {
+		w.Headers = make(map[string]string)
+	}
+	w.Headers[RouteGroupHeader] = group
 }
 
 func (w *Web3Actions) Close() {
