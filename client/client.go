@@ -227,6 +227,16 @@ func (w *Web3Actions) SetStorageAt(ctx context.Context, addr, slot, value string
 	return err
 }
 
+func (w *Web3Actions) SetRpcUrl(ctx context.Context, rpcUrl string) (any, error) {
+	var result any
+	err := w.C.Client().CallContext(ctx, &result, w.swapToAnvil("hardhat_setRpcUrl"), rpcUrl)
+	if err != nil {
+		zlog.Err(err).Msg("HardHatSetBalance error")
+		return result, err
+	}
+	return result, err
+}
+
 func (w *Web3Actions) GetEVMSnapshot(ctx context.Context) (*big.Int, error) {
 	var result hexutil.Big
 	err := w.C.Client().CallContext(ctx, &result, "evm_snapshot")
