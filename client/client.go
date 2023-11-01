@@ -18,7 +18,7 @@ import (
 const (
 	defaultProxyUrl    = "https://iris.zeus.fyi/v1/router"
 	proxyHeader        = "Proxy-Relay-To"
-	SessionLockHeader  = "Session-Lock-ID"
+	SessionLockHeader  = "X-Anvil-Session-Lock-ID"
 	DurableExecutionID = "Durable-Execution-ID"
 	EndSessionLockID   = "X-End-Session-Lock-ID"
 	RouteGroupHeader   = "X-Route-Group"
@@ -225,6 +225,16 @@ func (w *Web3Actions) GetStorageAt(ctx context.Context, addr, slot string) (hexu
 func (w *Web3Actions) SetStorageAt(ctx context.Context, addr, slot, value string) error {
 	err := w.C.Client().CallContext(ctx, nil, w.swapToAnvil("hardhat_setStorageAt"), addr, slot, value)
 	return err
+}
+
+func (w *Web3Actions) SetRpcUrl(ctx context.Context, rpcUrl string) (any, error) {
+	var result any
+	err := w.C.Client().CallContext(ctx, &result, w.swapToAnvil("hardhat_setRpcUrl"), rpcUrl)
+	if err != nil {
+		zlog.Err(err).Msg("HardHatSetBalance error")
+		return result, err
+	}
+	return result, err
 }
 
 func (w *Web3Actions) GetEVMSnapshot(ctx context.Context) (*big.Int, error) {
